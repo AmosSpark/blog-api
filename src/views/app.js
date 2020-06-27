@@ -26,7 +26,8 @@ const requestControl = require("../controllers/404_control");
 // VIEWS
 
 const postsView = require("./posts_route");
-const draftView = require("./drafts_route");
+const draftsView = require("./drafts_route");
+const categoriesView = require("./categories_route");
 
 // BODY-PARSER MW
 
@@ -39,7 +40,11 @@ app.use(postsBaseRoute, postsView);
 
 // INIT DRAFS ROUTER
 const draftsBaseRoute = "/drafts";
-app.use(draftsBaseRoute, draftView);
+app.use(draftsBaseRoute, draftsView);
+
+// INIT CATEGORIES ROUTER
+const categoriesBaseRoute = "/categories";
+app.use(categoriesBaseRoute, categoriesView);
 
 // HANDLE WRONG REQUEST
 
