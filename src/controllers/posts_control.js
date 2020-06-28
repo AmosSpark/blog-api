@@ -12,7 +12,7 @@ exports.getPosts_control = async (req, res) => {
 
 exports.getAPost_control = async (req, res) => {
   const id = req.params.id;
-  const findPost = await Post.findById(id); // find post by id
+  const findPost = await Post.find({ id }); // find post by id
   // validate
   if (findPost) {
     const post = findPost;
@@ -28,10 +28,10 @@ exports.getFirstNAmountOfPost_control = async (req, res) => {
   const n = parseInt(req.params.n);
   const posts = await Post.find().limit(n);
   // validate
-  if (n > Post.length - 1) {
+  if (n > Post.length + 1) {
     res.status(400).json({
       status: `false, requested number of post should not be more than ${
-        Post.length - 1
+        Post.length + 1
       }`,
     });
   } else {
@@ -70,7 +70,7 @@ exports.createPost_control = async (req, res) => {
 
 exports.updatePost_control = async (req, res) => {
   const id = req.params.id;
-  const findPost = await Post.findById(id);
+  const findPost = await Post.find({ id });
   // validate
   if (findPost) {
     const updatePost = req.body;
@@ -100,7 +100,7 @@ exports.updatePost_control = async (req, res) => {
     const updated_Post = await findPost.save();
     res.json({ status: true, updated_Post });
   } else {
-    res.status(400).json({ update: `error, genre id: ${id} not available` });
+    res.status(400).json({ update: `error, posts id: ${id} not available` });
   }
 };
 
@@ -108,7 +108,7 @@ exports.updatePost_control = async (req, res) => {
 
 exports.deletePost_control = async (req, res) => {
   const id = req.params.id;
-  const findPostAndRemove = await Post.findByIdAndRemove(id); // find post by id and del.
+  const findPostAndRemove = await Post.findOneAndRemove({ id }); // find post by id and del.
   // validate
   if (findPostAndRemove) {
     const post = findPostAndRemove;
