@@ -12,7 +12,7 @@ exports.getPosts_control = async (req, res) => {
 
 exports.getAPost_control = async (req, res) => {
   const id = req.params.id;
-  const findPost = await Post.find({ id }); // find post by id
+  const findPost = await Post.findById(id); // find post by id
   // validate
   if (findPost) {
     const post = findPost;
@@ -28,11 +28,10 @@ exports.getFirstNAmountOfPost_control = async (req, res) => {
   const n = parseInt(req.params.n);
   const posts = await Post.find().limit(n);
   // validate
-  if (n > Post.length + 1) {
+  const postLength = posts.length;
+  if (n > postLength) {
     res.status(400).json({
-      status: `false, requested number of post should not be more than ${
-        Post.length + 1
-      }`,
+      status: `false, requested number of post should not be more than ${postLength}`,
     });
   } else {
     res.json({ status: true, posts });
@@ -43,8 +42,6 @@ exports.getFirstNAmountOfPost_control = async (req, res) => {
 
 exports.createPost_control = async (req, res) => {
   const newPost = new Post({
-    id: req.body.id,
-
     title: req.body.title,
 
     description: req.body.description,
@@ -70,13 +67,13 @@ exports.createPost_control = async (req, res) => {
 
 exports.updatePost_control = async (req, res) => {
   const id = req.params.id;
-  const findPost = await Post.find({ id });
-  // validate
+  const findPost = await Post.findById(id);
+  //   // validate
   if (findPost) {
     const updatePost = req.body;
-    // update
     findPost.set({
-      id: updatePost.id ? updatePost.id : findPost.id,
+      // update id
+      _id: updatePost.id ? updatePost.id : findPost.id,
       // update title
       title: updatePost.title ? updatePost.title : findPost.title,
       // update description
@@ -97,8 +94,8 @@ exports.updatePost_control = async (req, res) => {
       time: updatePost.time ? updatePost.time : findPost.time,
     });
     // save
-    const updated_Post = await findPost.save();
-    res.json({ status: true, updated_Post });
+    const post = await findPost.save();
+    res.json({ status: true, post });
   } else {
     res.status(400).json({ update: `error, posts id: ${id} not available` });
   }
@@ -107,13 +104,13 @@ exports.updatePost_control = async (req, res) => {
 // DELETE POST
 
 exports.deletePost_control = async (req, res) => {
-  const id = req.params.id;
-  const findPostAndRemove = await Post.findOneAndRemove({ id }); // find post by id and del.
+  const _id = req.params.id;
+  const findPostAndRemove = await Post.findOneAndRemove({ _id }); // find post by id and del.
   // validate
   if (findPostAndRemove) {
     const post = findPostAndRemove;
     res.json({ status: true, post });
   } else {
-    res.status(400).json({ status: `false, post id: ${id} not available` });
+    res.status(400).json({ status: `false, post id: ${_id} not available` });
   }
 };
