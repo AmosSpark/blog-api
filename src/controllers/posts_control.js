@@ -68,7 +68,7 @@ exports.createPost_control = async (req, res) => {
 exports.updatePost_control = async (req, res) => {
   const id = req.params.id;
   const findPost = await Post.findById(id);
-  //   // validate
+  // validate
   if (findPost) {
     const updatePost = req.body;
     findPost.set({
@@ -97,7 +97,7 @@ exports.updatePost_control = async (req, res) => {
     const post = await findPost.save();
     res.json({ status: true, post });
   } else {
-    res.status(400).json({ update: `error, posts id: ${id} not available` });
+    res.status(400).json({ status: `error, post id: ${id} not available` });
   }
 };
 
