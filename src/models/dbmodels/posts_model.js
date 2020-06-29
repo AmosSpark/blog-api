@@ -54,6 +54,8 @@ const postSchema = new mongoose.Schema(
   { _id: false }
 );
 
+// AUTO-INCREMENT PLUGIN
+
 postSchema.plugin(AutoIncrement);
 
 // MODEL

@@ -26,6 +26,7 @@ const requestControl = require("../controllers/404_control");
 // VIEWS
 
 const postsView = require("./posts_route");
+const commentsView = require("./comments_route");
 const draftsView = require("./drafts_route");
 const categoriesView = require("./categories_route");
 
@@ -37,6 +38,10 @@ app.use(express.urlencoded({ extended: false })); // handle form data
 // INIT POSTS ROUTER
 const postsBaseRoute = "/posts";
 app.use(postsBaseRoute, postsView);
+
+// INIT COMMENTS ROUTER
+const commentsBaseRoute = "/:post/comments";
+app.use(commentsBaseRoute, commentsView);
 
 // INIT DRAFS ROUTER
 const draftsBaseRoute = "/drafts";
