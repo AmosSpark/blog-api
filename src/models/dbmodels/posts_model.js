@@ -44,7 +44,13 @@ const postSchema = new mongoose.Schema(
         return this.date;
       },
     },
+
+    comments: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment",
+    },
   },
+
   { _id: false }
 );
 
