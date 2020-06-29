@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
+const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 // SCHEMA
 
 const draftsSchema = new mongoose.Schema({
-  id: { type: Number },
+  _id: Number,
 
   title: { type: String, required: true, minlength: 5 },
 
@@ -43,6 +44,10 @@ const draftsSchema = new mongoose.Schema({
     },
   },
 });
+
+// AUTO-INCREMENT PLUGIN
+
+draftsSchema.plugin(AutoIncrement);
 
 // MODEL
 

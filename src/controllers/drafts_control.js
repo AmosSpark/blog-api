@@ -28,11 +28,10 @@ exports.getFirstNAmountOfDraft_control = async (req, res) => {
   const n = parseInt(req.params.n);
   const drafts = await Draft.find().limit(n);
   // validate
-  if (n > Draft.length - 1) {
+  const draftsLength = drafts.length;
+  if (n > draftsLength) {
     res.status(400).json({
-      status: `false, requested number of draft should not be more than ${
-        Draft.length - 1
-      }`,
+      status: `false, requested number of draft should not be more than ${draftsLength}`,
     });
   } else {
     res.json({ status: true, drafts });
@@ -43,8 +42,6 @@ exports.getFirstNAmountOfDraft_control = async (req, res) => {
 
 exports.crateADraft_control = async (req, res) => {
   const newDraft = new Draft({
-    id: req.body.id,
-
     title: req.body.title,
 
     description: req.body.description,
@@ -75,7 +72,7 @@ exports.updateADraft_control = async (req, res) => {
     const updateDraft = req.body;
     findDraft.set({
       // update id
-      id: updateDraft.id ? updateDraft.id : findDraft.id,
+      _id: updateDraft.id ? updateDraft.id : findDraft.id,
       // update title
       title: updateDraft.title ? updateDraft.title : findDraft.title,
       // update description
@@ -108,13 +105,13 @@ exports.updateADraft_control = async (req, res) => {
 // DELETE A DRAFT
 
 exports.deleteDraft_control = async (req, res) => {
-  const id = req.params.id;
-  const findDraftAndRemove = await Draft.findByIdAndRemove(id);
+  const _id = req.params.id;
+  const findDraftAndRemove = await Draft.findByIdAndRemove({ _id });
   // validate
   if (findDraftAndRemove) {
     const draft = findDraftAndRemove;
     res.json({ status: true, draft });
   } else {
-    res.json(400).status({ status: `false, draft id: ${id} not available` });
+    res.status(400).json({ status: `false, draft id: ${_id} not available` });
   }
 };
