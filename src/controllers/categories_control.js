@@ -28,11 +28,10 @@ exports.getFirstNAmountOfCategory_control = async (req, res) => {
   const n = parseInt(req.params.n);
   const categories = await Categorie.find().limit(n);
   // validate
-  if (n > Categorie.length - 1) {
+  const categoriesLength = categories.length;
+  if (n > categoriesLength) {
     res.status(400).json({
-      status: `false, requested number of draft should not be more than ${
-        Categorie.length - 1
-      }`,
+      status: `false, requested number of draft should not be more than ${categoriesLength}`,
     });
   } else {
     res.json({ status: true, categories });
@@ -43,8 +42,6 @@ exports.getFirstNAmountOfCategory_control = async (req, res) => {
 
 exports.createACategory_control = async (req, res) => {
   const newCategory = new Categorie({
-    id: req.body.id,
-
     name: req.body.name,
 
     description: req.body.description,
@@ -83,13 +80,15 @@ exports.updateACategory_control = async (req, res) => {
 // DELETE A CATEGORY
 
 exports.deleteACategory_control = async (req, res) => {
-  const id = req.params.id;
-  const findCategoryAndRemove = await Categorie.findByIdAndRemove(id);
+  const _id = req.params.id;
+  const findCategoryAndRemove = await Categorie.findByIdAndRemove(_id);
   // validate
   if (findCategoryAndRemove) {
     const category = findCategoryAndRemove;
     res.json({ status: true, category });
   } else {
-    res.status(400).json({ status: `false, category id: ${id} not available` });
+    res
+      .status(400)
+      .json({ status: `false, category id: ${_id} not available` });
   }
 };
