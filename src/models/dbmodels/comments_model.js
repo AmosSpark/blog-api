@@ -6,10 +6,20 @@ const AutoIncrement = require("mongoose-sequence")(mongoose);
 const commentsSchema = new mongoose.Schema(
   {
     _id: Number,
-    user: String,
-    comment: String,
-    date: Date,
-    time: Number,
+    user: { type: String, required: true },
+    comment: {
+      type: String,
+      required: function () {
+        return this.user;
+      },
+    },
+    date: {
+      type: Date,
+      default: Date.now,
+      required: function () {
+        return this.comment;
+      },
+    },
   },
   { _id: false }
 );

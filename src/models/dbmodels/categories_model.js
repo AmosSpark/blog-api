@@ -6,8 +6,13 @@ const AutoIncrement = require("mongoose-sequence")(mongoose);
 const categoriesSchema = new mongoose.Schema(
   {
     _id: Number,
-    name: String,
-    description: String,
+    name: { type: String, required: true },
+    description: {
+      type: String,
+      required: function () {
+        return this.name;
+      },
+    },
   },
   { _id: false }
 );
