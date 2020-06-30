@@ -3,7 +3,7 @@ const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 // SCHEMA
 
-const CategoriesSchema = new mongoose.Schema(
+const categoriesSchema = new mongoose.Schema(
   {
     _id: Number,
     name: String,
@@ -14,10 +14,13 @@ const CategoriesSchema = new mongoose.Schema(
 
 // AUTO-INCREMENT PLUGIN
 
-CategoriesSchema.plugin(AutoIncrement);
+categoriesSchema.plugin(AutoIncrement, {
+  id: "categories_counter",
+  inc_field: "_id",
+});
 
 // MODEL
 
-const Categorie = new mongoose.model("Categorie", CategoriesSchema);
+const Categorie = new mongoose.model("Categorie", categoriesSchema);
 
 module.exports = Categorie;

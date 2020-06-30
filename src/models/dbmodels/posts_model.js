@@ -56,7 +56,7 @@ const postSchema = new mongoose.Schema(
 
 // AUTO-INCREMENT PLUGIN
 
-postSchema.plugin(AutoIncrement);
+postSchema.plugin(AutoIncrement, { id: "posts_counter", inc_field: "_id" });
 
 // MODEL
 

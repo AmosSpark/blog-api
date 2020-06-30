@@ -16,7 +16,10 @@ const commentsSchema = new mongoose.Schema(
 
 // AUTO-INCREMENT PLUGIN
 
-commentsSchema.plugin(AutoIncrement);
+commentsSchema.plugin(AutoIncrement, {
+  id: "comments_counter",
+  inc_field: "_id",
+});
 
 // MODEL
 

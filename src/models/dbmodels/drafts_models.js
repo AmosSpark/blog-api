@@ -47,7 +47,7 @@ const draftsSchema = new mongoose.Schema({
 
 // AUTO-INCREMENT PLUGIN
 
-draftsSchema.plugin(AutoIncrement);
+draftsSchema.plugin(AutoIncrement, { id: "drafts_counter", inc_field: "_id" });
 
 // MODEL
 

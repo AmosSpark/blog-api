@@ -3,7 +3,7 @@ const Comment = require("../models/dbmodels/comments_model");
 
 // GET COMMENTS FROM A POST
 
-exports.getComments_control = (req,res) => {
+exports.getComments_control = async (req,res) => {
     const post = req.params.post
     const findCommentsFromPost = await Post.findById(post).select({comments: 1}) // get a post and select comments
     const comments = findCommentsFromPost
@@ -12,7 +12,7 @@ exports.getComments_control = (req,res) => {
 
 // GET A COMMENT
 
-exports.getAComment_control = (req,res) => {
+exports.getAComment_control = async (req,res) => {
     const post = req.params.post
     const id = req.params.id;
     // get post
@@ -36,7 +36,7 @@ exports.getAComment_control = (req,res) => {
 
 // GET FIRST N AMOUNT OF COMMENT
 
-exports.getFirstNAmountOfComment_control = (req,res) => {
+exports.getFirstNAmountOfComment_control = async (req,res) => {
     const post = req.params.post
     const n = parseInt(req.params.n);
     // get a post
@@ -58,7 +58,7 @@ exports.getFirstNAmountOfComment_control = (req,res) => {
 
 // CREATE A COMMENT
 
-exports.createAComment_control = (req,res) => {
+exports.createAComment_control = async (req,res) => {
     const newComment = new Comment({
         user: req.body.user,
 
@@ -75,7 +75,7 @@ exports.createAComment_control = (req,res) => {
 
 // UPDATE A COMMENT
 
-exports.updateAComment_control = (req,res) => {
+exports.updateAComment_control = async (req,res) => {
     const post = req.params.post
     const id = req.params.id;
      // get post
@@ -110,7 +110,7 @@ exports.updateAComment_control = (req,res) => {
 
 // DELETE A COMMENT
 
-exports.deleteAComment_control = (req,res) => {
+exports.deleteAComment_control = async (req,res) => {
     const post = req.params.post
     const _id = req.params.id;
      // get post
