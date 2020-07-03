@@ -1,129 +1,174 @@
-const Post = require("../models/dbmodels/posts_model")
-const Comment = require("../models/dbmodels/comments_model");
+const { comment_models } = require("../models/dbmodels/comments_model");
+
+// GET ALL COMMENTS
+
+exports.getAllComment_control = async (req, res) => {
+  const findAllComments = await comment_models.Comment.find().populate("post", {
+    _id: 1,
+    title: 1,
+  }); // get all
+  const comments = findAllComments;
+  res.json(comments);
+};
+
+// CREATE A COMMENT COLLECTION OF A POST
+
+exports.createAComment_control = async (req, res) => {
+  const newCommentCollection = new comment_models.Comment({
+    data: req.body.data,
+    post: req.body.post,
+  });
+  // save
+  const comment = await newCommentCollection.save();
+  res.json({ status: true, comment });
+};
+
+// DELETE A COMMENT COLLECTION OF A POST
+
+exports.deleteAComment_control = async (req, res) => {
+  const _id = req.params.id;
+  // get post
+  const findCommentsOfAPostFromComments = await comment_models.Comment.findOneAndRemove(
+    {
+      _id,
+    }
+  );
+  // validate
+  if (findCommentsOfAPostFromComments) {
+    const comment = findCommentsOfAPostFromComments;
+    res.json({ status: true, comment });
+  } else {
+    res
+      .status(400)
+      .json({ status: `false, comment collection id: ${_id} not available` });
+  }
+};
 
 // GET COMMENTS FROM A POST
 
-exports.getComments_control = async (req,res) => {
-    const post = req.params.post
-    const findCommentsFromPost = await Post.findById(post).select({comments: 1}) // get a post and select comments
-    const comments = findCommentsFromPost
-    res.json(comments)
-}
+exports.getCommentsFromAPost_control = async (req, res) => {
+  const id = req.params.id;
+  const findCommentOfAPostFromCommentCollection = await comment_models.Comment.findById(
+    id
+  ).populate("post", { _id: 1, title: 1 }); // get post from comment colletion by id then display all comments in post
+  // validate
+  if (findCommentOfAPostFromCommentCollection) {
+    const comments = findCommentOfAPostFromCommentCollection;
+    res.json({ status: true, comments });
+  } else {
+    res
+      .status(400)
+      .json({ status: `false, comment collection id: ${id} not available` });
+  }
+};
 
-// GET A COMMENT
+// ADD TO COMMENTS OF A POST
 
-exports.getAComment_control = async (req,res) => {
-    const post = req.params.post
-    const id = req.params.id;
-    // get post
-    const findCommentsFromPost = await Post.findById(post) 
-    // get comments from post
-    .select({comments: 1})
-   // get a comment from comments
-    const findComment = findCommentsFromPost.findById({id});
-    // validate
-    if (findComment) {
-        const comment = findComment
-        res.json({status: true, comment})
-    } else {
-        res.status(400).json({status: `false, comment id: ${id} not available`})
-    }
-}
-
-
-
-
-
-// GET FIRST N AMOUNT OF COMMENT
-
-exports.getFirstNAmountOfComment_control = async (req,res) => {
-    const post = req.params.post
-    const n = parseInt(req.params.n);
-    // get a post
-    const findCommentsFromPost = await Post.findById(post) 
-    // get coments from posts
-    .select({comments: 1})
-    // limit comments result
-    const comments = findCommentsFromPost.limit(n);
-    // validate
-    const commentsLength = comments.length;
-    if (n > commentsLength) {
-        res.status(400).json({
-            status: `false, requested number of comment should not be more than ${commentsLength}`,
-        });
-    } else {
-        res.json({status: true, comments});
-    }
-}
-
-// CREATE A COMMENT
-
-exports.createAComment_control = async (req,res) => {
-    const newComment = new Comment({
-        user: req.body.user,
-
-        comment: req.body.comment,
-
-        date: req.body.date,
-
-        time: req.body.title,
+exports.addToCommentsOfAPost = async (req, res) => {
+  const id = req.params.id;
+  const findCommentDocument = await comment_models.Comment.findById(id);
+  // validate
+  if (findCommentDocument) {
+    const newComment = new comment_models.Post_Comment({
+      // new comment
+      user: req.body.user,
+      comment: req.body.comment,
     });
+    findCommentDocument.data.push(newComment); // add to  comments of a post
     // save
-    const comment = await newComment.save();
-    res.json({status: true, comment})
-}
+    const comment = await findCommentDocument.save();
+    res.json({ status: true, comment });
+  } else {
+    res
+      .status(400)
+      .json({ status: `false, comment collection id: ${id} not available` });
+  }
+};
 
-// UPDATE A COMMENT
+// UPDATE A COMMENT FROM A POST
 
-exports.updateAComment_control = async (req,res) => {
-    const post = req.params.post
-    const id = req.params.id;
-     // get post
-     const findCommentsFromPost = await Post.findById(post) 
-     // get comments from post
-     .select({comments: 1})
-    // get a comment from comments
-     const findComment = findCommentsFromPost.findById({id});
+exports.updateACommentFromAPost = async (req, res) => {
+  const id = req.params.id;
+  const findCommentDocument = await comment_models.Comment.findById(id);
+  // validate
+  if (findCommentDocument) {
+    const _id = req.params.n;
+    const updateComment = req.body;
+    const findCommentToUpdate = findCommentDocument.data.id(_id);
     // validate
-    if (findComment) {
-        // update comment
-        const updateComment = req.body;
-        findComment.set({
-            // update id
-            _id: updateComment.id ? updateComment.id : findComment.id,
-            // update user
-            user: updateComment.user ? updateComment.user : findComment.user,
-            // update comment
-            comment: updateComment.comment ? updateComment.comment : findComment.comment,
-            // update delete
-            date: updateComment.date ? updateComment.date : findComment.date,
-            // update time
-            time: updateComment.title ? updateComment.title : findComment.time,
-        });
-        // save
-        const comment = await findComment.save();
-        res.json({status: true, comment});
+    if (findCommentToUpdate) {
+      const commentToUpdate = findCommentToUpdate;
+      // update
+      commentToUpdate.comment = updateComment.comment
+        ? updateComment.comment
+        : findComment.comment;
+      // save
+      const comment = await findCommentDocument.save();
+      res.json({ status: true, comment });
     } else {
-        res.status(400).json({ status: `error, comment id: ${id} not available` });
+      res
+        .status(400)
+        .json({ status: `false, comment id: ${_id} not available` });
     }
-}
+  } else {
+    res
+      .status(400)
+      .json({ status: `false, comment collection id: ${id} not available` });
+  }
+};
 
-// DELETE A COMMENT
+// GET RANGE OF COMMENTS IN A POST
 
-exports.deleteAComment_control = async (req,res) => {
-    const post = req.params.post
-    const _id = req.params.id;
-     // get post
-     const findCommentsFromPost = await Post.findById(post) 
-     // get comments from post
-     .select({comments: 1})
-     // get a comment and delete from comments
-     const findCommentAndRemove = findCommentsFromPost.findOneAndRemove({_id});
-    // validate 
-    if (findCommentAndRemove) {
-        const comment = findCommentAndRemove
-        res.json({status: true, comment})
-    } else {
-        res.status(400).json({ status: `false, comment id: ${_id} not available` });
-    }
-}
+exports.getRangeOfCommentsInAPost_control = async (req, res) => {
+  const id = req.params.id;
+  const start = req.params.a - 1;
+  const end = req.params.b;
+  const findCommentDocument = await comment_models.Comment.findById(id); // get comment collection document
+  // validate
+  if (findCommentDocument) {
+    const _id = req.params.n;
+    // acess data
+    const commentsFromPost = findCommentDocument.data;
+    const comments = commentsFromPost.slice(start, end);
+    res.json({ status: true, comments });
+  } else {
+    res
+      .status(400)
+      .json({ status: `false, comment collection id: ${id} not available` });
+  }
+
+  // query
+};
+
+// REMOVE A COMMENT FROM A POST
+
+exports.deleteACommentFromAPost_control = async (req, res) => {
+  const id = req.params.id;
+  const _id = req.params.n;
+  const findCommentDocument = await comment_models.Comment.findById(id); // get comment collection document
+  // validate
+  if (findCommentDocument) {
+    const commentToRemove = findCommentDocument.data.id(_id); // get comment to remove
+    commentToRemove.remove(); // remove document
+    // save
+    const comment = await findCommentDocument.save();
+    res.json({ status: true, comment });
+  } else {
+    res
+      .status(400)
+      .json({ status: `false, comment collection id: ${id} not available` });
+  }
+};
+
+// DONE
+
+/*
+  get all comments
+  get all comments from a post
+  add to comments of a post
+  update a comment from a post
+  post comments of a post to comments collection
+  // get N amount of comment of a post from comments collection
+  // get range of comment of a post from comments collection
+  del. comments of a post from comment collection - validate
+*/

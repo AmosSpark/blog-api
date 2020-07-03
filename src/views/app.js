@@ -40,7 +40,7 @@ const postsBaseRoute = "/posts";
 app.use(postsBaseRoute, postsView);
 
 // INIT COMMENTS ROUTER
-const commentsBaseRoute = "/:post/comments";
+const commentsBaseRoute = "/comments";
 app.use(commentsBaseRoute, commentsView);
 
 // INIT DRAFS ROUTER

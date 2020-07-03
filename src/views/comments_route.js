@@ -3,28 +3,39 @@ const express = require("express"),
 
 const commentsControl = require("../controllers/comments_control"); // comments_control
 
-// GET COMMENTS FROM A POST
+// GET ALL COMMENTS
 
-router.get("/", commentsControl.getComments_control);
+router.get("/", commentsControl.getAllComment_control);
 
-// GET A COMMENT
-
-router.get("/:id", commentsControl.getAComment_control);
-
-// GET FIRST N AMOUNT OF COMMENT
-
-router.get("/first/:n", commentsControl.getFirstNAmountOfComment_control);
-
-// CREATE A COMMENT
+// CREATE A COMMENT COLLECTION OF A POST
 
 router.post("/", commentsControl.createAComment_control);
 
-// UPDATE A COMMENT
-
-router.put("/:id", commentsControl.updateAComment_control);
-
-// DELETE A COMMENT
+// DELETE A COMMENT COLLECTION OF A POST
 
 router.delete("/:id", commentsControl.deleteAComment_control);
+
+// GET COMMENTS FROM A POST
+
+router.get("/:id", commentsControl.getCommentsFromAPost_control);
+
+// ADD TO COMMENTS OF A POST
+
+router.post("/:id/add", commentsControl.addToCommentsOfAPost);
+
+// UPDATE A COMMENT FROM A POST
+
+router.put("/:id/mod/:n", commentsControl.updateACommentFromAPost);
+
+// GET RANGE OF COMMENTS IN A POST
+
+router.get(
+  "/:id/range/:n/:a/:b",
+  commentsControl.getRangeOfCommentsInAPost_control
+);
+
+// REMOVE A COMMENT FROM A POST
+
+router.delete("/:id/rem/:n", commentsControl.deleteACommentFromAPost_control);
 
 module.exports = router;
