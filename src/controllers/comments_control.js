@@ -126,7 +126,6 @@ exports.getRangeOfCommentsInAPost_control = async (req, res) => {
   const findCommentDocument = await comment_models.Comment.findById(id); // get comment collection document
   // validate
   if (findCommentDocument) {
-    const _id = req.params.n;
     // acess data
     const commentsFromPost = findCommentDocument.data;
     const comments = commentsFromPost.slice(start, end);
@@ -136,8 +135,6 @@ exports.getRangeOfCommentsInAPost_control = async (req, res) => {
       .status(400)
       .json({ status: `false, comment collection id: ${id} not available` });
   }
-
-  // query
 };
 
 // REMOVE A COMMENT FROM A POST
@@ -159,16 +156,3 @@ exports.deleteACommentFromAPost_control = async (req, res) => {
       .json({ status: `false, comment collection id: ${id} not available` });
   }
 };
-
-// DONE
-
-/*
-  get all comments
-  get all comments from a post
-  add to comments of a post
-  update a comment from a post
-  post comments of a post to comments collection
-  // get N amount of comment of a post from comments collection
-  // get range of comment of a post from comments collection
-  del. comments of a post from comment collection - validate
-*/

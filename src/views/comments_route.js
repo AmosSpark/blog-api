@@ -3,7 +3,7 @@ const express = require("express"),
 
 const commentsControl = require("../controllers/comments_control"); // comments_control
 
-// GET ALL COMMENTS
+// GET ALL COMMENT COLLECTION
 
 router.get("/", commentsControl.getAllComment_control);
 
@@ -30,7 +30,7 @@ router.put("/:id/mod/:n", commentsControl.updateACommentFromAPost);
 // GET RANGE OF COMMENTS IN A POST
 
 router.get(
-  "/:id/range/:n/:a/:b",
+  "/:id/range/:a/:b",
   commentsControl.getRangeOfCommentsInAPost_control
 );
 

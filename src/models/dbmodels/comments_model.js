@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const moment = require("moment");
 const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 // SCHEMAS
@@ -19,8 +20,8 @@ const postCommentSchema = new mongoose.Schema(
     },
 
     date: {
-      type: Date,
-      default: Date.now,
+      type: String, // type Date not working wiht moment js
+      default: () => moment().format("LLL"),
       required: function () {
         return this.comment;
       },
