@@ -46,6 +46,8 @@ exports.crateADraft_control = async (req, res) => {
 
     description: req.body.description,
 
+    body: req.body.body,
+
     author: req.body.author,
 
     category: req.body.category,
@@ -79,6 +81,8 @@ exports.updateADraft_control = async (req, res) => {
       description: updateDraft.description
         ? updateDraft.description
         : findDraft.description,
+      // update body
+      body: updateDraft.body ? updateDraft.body : findDraft.body,
       // update author
       author: updateDraft.author ? updateDraft.author : findDraft.author,
       // update category

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const moment = require("moment");
 const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 // SCHEMA
@@ -16,10 +17,17 @@ const postSchema = new mongoose.Schema(
       },
     },
 
-    author: {
+    body: {
       type: String,
       required: function () {
         return this.description;
+      },
+    },
+
+    author: {
+      type: String,
+      required: function () {
+        return this.body;
       },
     },
 
@@ -35,8 +43,8 @@ const postSchema = new mongoose.Schema(
     image: { type: String },
 
     date: {
-      type: Date,
-      default: Date.now,
+      type: String, // type Date not working with momment js
+      default: () => moment().format("LLL"),
       required: function () {
         return this.category;
       },

@@ -46,6 +46,8 @@ exports.createPost_control = async (req, res) => {
 
     description: req.body.description,
 
+    body: req.body.body,
+
     author: req.body.author,
 
     category: req.body.category,
@@ -80,6 +82,8 @@ exports.updatePost_control = async (req, res) => {
       description: updatePost.description
         ? updatePost.description
         : findPost.description,
+      // update body
+      body: updatePost.body ? updatePost.body : findPost.body,
       // update author
       author: updatePost.author ? updatePost.author : findPost.author,
       // update category
