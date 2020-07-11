@@ -1,6 +1,7 @@
 const express = require("express"),
   app = express();
 const mongoose = require("mongoose");
+const config = require("config");
 
 mongoose
   .connect("mongodb://localhost/blog", {
@@ -29,6 +30,8 @@ const postsView = require("./posts_route");
 const commentsView = require("./comments_route");
 const draftsView = require("./drafts_route");
 const categoriesView = require("./categories_route");
+const userView = require("./user_route");
+const authView = require("./auth_route");
 
 // BODY-PARSER MW
 
@@ -50,6 +53,21 @@ app.use(draftsBaseRoute, draftsView);
 // INIT CATEGORIES ROUTER
 const categoriesBaseRoute = "/categories";
 app.use(categoriesBaseRoute, categoriesView);
+
+// INIT USER ROUTER
+const userBaseRoute = "/users";
+app.use(userBaseRoute, userView);
+
+// INIT AUTH USER
+const authBaseRoute = "/auth";
+app.use(authBaseRoute, authView);
+
+// VALIDATE ENV VARIABLE
+
+if (!config.get("jwtPrivateKey")) {
+  console.error("FATAL ERROR: jwtPrivateKey is not defined.");
+  process.exit(1);
+}
 
 // HANDLE WRONG REQUEST
 
